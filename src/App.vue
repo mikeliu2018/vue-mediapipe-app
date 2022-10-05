@@ -2,11 +2,26 @@
   <div id="app">
     <nav>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/hands">Hands</router-link> |
+      <router-link to="/pose">Pose</router-link> |
+      <router-link to="/holistic">Holistic</router-link>
+      <SignoutButton></SignoutButton>
     </nav>
     <router-view />
   </div>
 </template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import SignoutButton from "./components/SignoutButton.vue";
+@Component({
+  components: {
+    SignoutButton,
+  },
+})
+export default class AppView extends Vue {}
+</script>
 
 <style lang="scss">
 #app {
