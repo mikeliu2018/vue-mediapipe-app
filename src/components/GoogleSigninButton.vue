@@ -3,6 +3,7 @@
     <div
       id="g_id_onload"
       data-auto_prompt="false"
+      ref="g_btn_signin"
       v-show="signInState === ''"
     ></div>
     <!-- <div
@@ -44,6 +45,10 @@ export default class GoogleSigninButton extends Vue {
   public readonly GOOGLE_CLIENT_ID =
     process.env.VUE_APP_GOOGLE_SIGNIN_CLIENT_ID;
 
+  public $refs!: {
+    g_btn_signin: HTMLDivElement;
+  };
+
   @Prop() private msg!: string;
   get signInState() {
     return this.$store.getters.credential;
@@ -84,33 +89,30 @@ export default class GoogleSigninButton extends Vue {
                   type: "default",
                   message: "You are logged in.",
                 });
+              } else {
+                LogService.error_log(res);
+                this.$toast.warning(`Error: ${res.error}`);
               }
             } catch (error: any) {
               LogService.error_log(error);
-              this.$toast.error("Error: %s", error.message);
+              this.$toast.error(`Error: ${error.message}`);
             }
           }
         },
       });
 
-      if (UserService.isAuth() === false) {
-        const getSigninElement = document.getElementById("g_id_onload");
-        if (getSigninElement !== null) {
-          // cancel prompt component display
-          window.google.accounts.id.cancel();
+      // cancel prompt component display
+      window.google.accounts.id.cancel();
 
-          const signinElement: HTMLElement = getSigninElement;
-          window.google.accounts.id.renderButton(signinElement, {
-            theme: "filled_blue",
-            size: "large",
-            type: "standard",
-            text: "signin_with",
-            // width: 500,
-            shape: "circle",
-            logo_alignment: "center",
-          });
-        }
-      }
+      window.google.accounts.id.renderButton(this.$refs.g_btn_signin, {
+        theme: "filled_blue",
+        size: "large",
+        type: "standard",
+        text: "signin_with",
+        // width: 500,
+        shape: "circle",
+        logo_alignment: "center",
+      });
     };
   }
 }
